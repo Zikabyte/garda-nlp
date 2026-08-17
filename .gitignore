@@ -33,3 +33,9 @@ pyvenv.cfg
 .idea/
 *.suo
 *.ntvs*
+
+# Python bytecode and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
