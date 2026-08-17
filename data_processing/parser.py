@@ -37,8 +37,8 @@ def main():
     test_df = parse_pan12_test()
 
     # Pickle
-    training_df.to_pickle(DATA_DIR / "processed" / "pickle" / "training_rows.pkl")
-    test_df.to_pickle(DATA_DIR / "processed" / "pickle" / "test_rows.pkl")
+    training_df.to_pickle(DATA_DIR / "processed" / "pickle" / "training_df.pkl")
+    test_df.to_pickle(DATA_DIR / "processed" / "pickle" / "test_df.pkl")
 
     # Display Information
     print(f"Conversation Count (Training): {training_df['conversation_id'].nunique()}")
