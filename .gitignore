@@ -1,0 +1,35 @@
+# Datasets
+data/raw/*
+data/processed/*
+
+# Heavy model files, weights, or tokenizers
+artifacts/
+models/
+*.bin
+*.pt
+*.pkl
+*.h5
+*.onnx
+*.ckpt
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+pyvenv.cfg
+
+# Secret keys (Hugging Face tokens, OpenAI keys, etc.)
+.env
+.openai_api_key
+.hf_token
+
+# Notebook checkpoints
+.ipynb_checkpoints/
+*/.ipynb_checkpoints/*
+
+# VS Code and PyCharm
+.vscode/
+.idea/
+*.suo
+*.ntvs*
