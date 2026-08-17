@@ -10,20 +10,49 @@ PAN12_TEST_PATH = DATA_DIR / "pan12-test" / "pan12-sexual-predator-identificatio
 def parse_pan12_training():
     tree = etree.parse(PAN12_TRAINING_PATH)
     root = tree.getroot()
-    return root
+
+    rows = []
+    for conversation in root.findall("conversation"):
+        conv_id = conversation.get("id")
+        for message in conversation.findall("message"):
+            rows.append({
+                "conversation_id": conv_id,
+                "author_id": message.findtext("author"),
+                "time": message.findtext("time"),
+                "text": message.findtext("text"),
+                "line": message.get("line")
+            })
+
+    return (rows, root)
 
 def parse_pan12_test():
     tree = etree.parse(PAN12_TEST_PATH)
     root = tree.getroot()
-    return root
+
+    rows = []
+    for conversation in root.findall("conversation"):
+            conv_id = conversation.get("id")
+            for message in conversation.findall("message"):
+                rows.append({
+                    "conversation_id": conv_id,
+                    "author_id": message.findtext("author"),
+                    "time": message.findtext("time"),
+                    "text": message.findtext("text"),
+                    "line": message.get("line")
+                })
+                
+    return (rows, root)
 
 def main():
-    pan12_training_root = parse_pan12_training()
-    pan12_test_root = parse_pan12_test()
+    training_rows, training_root = parse_pan12_training()
+    test_rows, test_root = parse_pan12_test()
 
     # Display Information 
-    print(f"Conversation Count (Training): {len(pan12_training_root)}")
-    print(f"Conversation Count (Test): {len(pan12_test_root)}")
+    print(f"Conversation Count (Training): {len(training_root)}")
+    print(f"Conversation Count (Test): {len(test_root)}")
+
+    print(training_rows)
+    print(test_rows)
 
 if __name__ == '__main__':
     main()
