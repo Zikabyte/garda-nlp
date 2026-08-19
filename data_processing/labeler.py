@@ -45,7 +45,7 @@ def label_by_lines(df, suspicious_lines_df):
     suspicious_lines_df["is_suspicious"] = True
 
     merged = df.merge(suspicious_lines_df, on=["conversation_id", "line"], how="left")
-    merged["is_suspicious"] = merged["is_suspicious"].fillna(False)
+    merged["is_suspicious"] = merged["is_suspicious"].fillna(False).astype(bool)
 
     return merged
 
