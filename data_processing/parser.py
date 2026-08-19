@@ -3,13 +3,14 @@ from pathlib import Path
 from lxml import etree
 import pandas as pd
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
-RAW_DATA_DIR = DATA_DIR / "raw"
-PICKLE_DIR = DATA_DIR / "processed" / "pickle"
-PAN12_TRAINING_PATH = RAW_DATA_DIR / "pan12-training" / "pan12-sexual-predator-identification-training-corpus-2012-05-01.xml"
-PAN12_TEST_PATH = RAW_DATA_DIR / "pan12-test" / "pan12-sexual-predator-identification-test-corpus-2012-05-17.xml"
-TRAINING_PICKLE_PATH = PICKLE_DIR / "training_df.pkl"
-TEST_PICKLE_PATH = PICKLE_DIR / "test_df.pkl"
+from configs import paths
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+PAN12_TRAINING_PATH = PROJECT_ROOT / paths.PAN12_TRAINING_XML_PATH
+PAN12_TEST_PATH = PROJECT_ROOT / paths.PAN12_TEST_XML_PATH
+TRAINING_PICKLE_PATH = PROJECT_ROOT / paths.PARSED_TRAINING_PICKLE_PATH
+TEST_PICKLE_PATH = PROJECT_ROOT / paths.PARSED_TEST_PICKLE_PATH
 
 def _parse_pan12_xml(xml_path):
     tree = etree.parse(xml_path)

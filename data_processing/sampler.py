@@ -1,13 +1,21 @@
+from pathlib import Path
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 
-from labeler import (
+from configs import paths
+from data_processing.labeler import (
     TEST_PICKLE_DIR,
     TEST_SUSPICIOUS_LINES_DIR,
     load_df,
     load_suspicious_lines,
     label_by_lines,
 )
+
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+SAMPLED_TRAIN_PICKLE_PATH = PROJECT_ROOT / paths.SAMPLED_TRAIN_PICKLE_PATH
+SAMPLED_TEST_PICKLE_PATH = PROJECT_ROOT / paths.SAMPLED_TEST_PICKLE_PATH
 
 def train_test_split_df(df, test_size=0.2, random_state=42):
     """
@@ -38,20 +46,37 @@ def sample_balanced(df, label_col="is_suspicious", ratio=1.0, random_state=42):
     sampled = pd.concat([positives, negative_sample])
     return sampled.sample(frac=1, random_state=random_state).reset_index(drop=True)
 
+def load_train_test_df(corpus_df, suspicious_lines, force=False):
+    """
+    Loads balanced train dataframe and test dataframe
+    from pickle (if exists) or newly generated
+    """
+    if not force and SAMPLED_TRAIN_PICKLE_PATH.exists() and SAMPLED_TEST_PICKLE_PATH.exists():
+        return pd.read_pickle(SAMPLED_TRAIN_PICKLE_PATH), pd.read_pickle(SAMPLED_TEST_PICKLE_PATH)
+
+    labeled_df = label_by_lines(corpus_df, suspicious_lines)
+    train_df, test_df = train_test_split_df(labeled_df)
+    balanced_train_df = sample_balanced(train_df)
+
+    SAMPLED_TRAIN_PICKLE_PATH.parent.mkdir(parents=True, exist_ok=True)
+    balanced_train_df.to_pickle(SAMPLED_TRAIN_PICKLE_PATH)
+    test_df.to_pickle(SAMPLED_TEST_PICKLE_PATH)
+
+    return balanced_train_df, test_df
+
+    
+
+
 def main():
     # PAN12's "test" corpus is our only source of line-level (so that it's precise)
     corpus_df = load_df(TEST_PICKLE_DIR)
     suspicious_lines = load_suspicious_lines(TEST_SUSPICIOUS_LINES_DIR)
-    labeled_df = label_by_lines(corpus_df, suspicious_lines)
 
-    train_df, test_df = train_test_split_df(labeled_df)
+    balanced_train_df, test_df = load_train_test_df(corpus_df, suspicious_lines)
 
-    print("[Train Split]\n", train_df["is_suspicious"].value_counts(), end="\n\n")
-    print("[Test Split]\n", test_df["is_suspicious"].value_counts(), end="\n\n")
+    print("[Balanced Train Split]\n", balanced_train_df["is_suspicious"].value_counts(), end="\n\n")
+    print("[Test Split]\n", test_df["is_suspicious"].value_counts())
 
-    balanced_train_df = sample_balanced(train_df)
-
-    print("[Balanced Train Split]\n", balanced_train_df["is_suspicious"].value_counts())
 
 if __name__ == "__main__":
     main()

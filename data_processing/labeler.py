@@ -1,13 +1,16 @@
 from pathlib import Path
 import pandas as pd
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
-TRAINING_PICKLE_DIR = DATA_DIR / "processed" / "pickle" / "training_df.pkl"
-TRAINING_PREDATOR_IDS_DIR = DATA_DIR / "raw" / "pan12-training" / "pan12-sexual-predator-identification-training-corpus-predators-2012-05-01.txt"
+from configs import paths
 
-TEST_PICKLE_DIR = DATA_DIR / "processed" / "pickle" / "test_df.pkl"
-TEST_PREDATOR_IDS_DIR = DATA_DIR / "raw" / "pan12-test" / "pan12-sexual-predator-identification-groundtruth-problem1.txt"
-TEST_SUSPICIOUS_LINES_DIR = DATA_DIR / "raw" / "pan12-test" / "pan12-sexual-predator-identification-groundtruth-problem2.txt"
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+
+TRAINING_PICKLE_DIR = PROJECT_ROOT / paths.PARSED_TRAINING_PICKLE_PATH
+TRAINING_PREDATOR_IDS_DIR = PROJECT_ROOT / paths.TRAINING_PREDATOR_IDS_PATH
+
+TEST_PICKLE_DIR = PROJECT_ROOT / paths.PARSED_TEST_PICKLE_PATH
+TEST_PREDATOR_IDS_DIR = PROJECT_ROOT / paths.TEST_PREDATOR_IDS_PATH
+TEST_SUSPICIOUS_LINES_DIR = PROJECT_ROOT / paths.TEST_SUSPICIOUS_LINES_PATH
 
 def load_df(path):
     """
@@ -41,6 +44,8 @@ def load_suspicious_lines(path):
     return pd.read_csv(path, sep="\t", names=["conversation_id", "line"], dtype=str)
 
 def label_by_lines(df, suspicious_lines_df):
+    
+
     suspicious_lines_df = suspicious_lines_df.copy()
     suspicious_lines_df["is_suspicious"] = True
 
