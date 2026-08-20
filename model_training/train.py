@@ -41,7 +41,9 @@ def main():
     train_df = train_df.rename(columns={"is_suspicious": "label"})
     train_df["label"] = train_df["label"].astype(int)
 
-    train_dataset = Dataset.from_pandas(train_df[["text", "label"]])
+    # SetFit's Trainer expects a "text" column; our source column is
+    # "context_text" (message + preceding conversation window)
+    train_dataset = Dataset.from_pandas(train_df[["context_text", "label"]].rename(columns={"context_text": "text"}))
 
     train(train_dataset)
 

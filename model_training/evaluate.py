@@ -44,7 +44,7 @@ def print_samples(model, test_df, n=10, random_state=42):
     negatives = test_df[test_df["label"] == 0].sample(n=per_class, random_state=random_state)
 
     sample = pd.concat([positives, negatives]).sample(frac=1, random_state=random_state)
-    probas = model.predict_proba(sample["text"].tolist(), as_numpy=True)[:, 1]
+    probas = model.predict_proba(sample["context_text"].tolist(), as_numpy=True)[:, 1]
 
     for text, true_label, proba in zip(sample["text"], sample["label"], probas):
         print(f"[label={true_label}] [proba={proba:.4f}] {text}")
@@ -60,7 +60,7 @@ def main():
     test_df = test_df.rename(columns={"is_suspicious": "label"})
     test_df["label"] = test_df["label"].astype(int)
 
-    probas = model.predict_proba(test_df["text"].tolist(), as_numpy=True)[:, 1]
+    probas = model.predict_proba(test_df["context_text"].tolist(), as_numpy=True)[:, 1]
 
     fixed_predictions = (probas >= 0.95).astype(int)
     evaluate(test_df["label"], fixed_predictions, label="Fixed threshold (0.95)")
