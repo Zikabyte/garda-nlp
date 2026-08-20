@@ -5,12 +5,14 @@ data/processed/*
 # Heavy model files, weights, or tokenizers
 artifacts/
 models/
+checkpoints/
 *.bin
 *.pt
 *.pkl
 *.h5
 *.onnx
 *.ckpt
+*.safetensors
 
 # Virtual environments
 .venv/

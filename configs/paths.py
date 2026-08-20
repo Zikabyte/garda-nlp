@@ -22,3 +22,6 @@ SAMPLED_TEST_PICKLE_PATH = SAMPLED_PICKLE_DIR / "test_split_df.pkl"
 TRAINING_PREDATOR_IDS_PATH = RAW_DATA_DIR / "pan12-training" / "pan12-sexual-predator-identification-training-corpus-predators-2012-05-01.txt"
 TEST_PREDATOR_IDS_PATH = RAW_DATA_DIR / "pan12-test" / "pan12-sexual-predator-identification-groundtruth-problem1.txt"
 TEST_SUSPICIOUS_LINES_PATH = RAW_DATA_DIR / "pan12-test" / "pan12-sexual-predator-identification-groundtruth-problem2.txt"
+
+MODEL_DIR = Path("models")
+SETFIT_MODEL_PATH = MODEL_DIR / "garda-setfit"
