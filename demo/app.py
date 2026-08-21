@@ -12,6 +12,10 @@ PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MODEL_SAVE_PATH = PROJECT_ROOT / paths.SETFIT_MODEL_PATH
 CONTEXT_WINDOW = 3
 
+# Fallback for environments without the local models/ folder (e.g. Colab) -
+# update this to whatever repo `upload_model_to_hf.py` was pushed to.
+HF_MODEL_REPO = "zikabyte/garda-setfit"
+
 EXAMPLE_CONVERSATIONS = [
     """A: hey whats up
 B: nm just chilling, u?
@@ -32,7 +36,10 @@ B: haha thanks i guess
 A: whats your address, i wanna send you something""",
 ]
 
-model = SetFitModel.from_pretrained(MODEL_SAVE_PATH)
+try:
+    model = SetFitModel.from_pretrained(MODEL_SAVE_PATH)
+except (OSError, FileNotFoundError):
+    model = SetFitModel.from_pretrained(HF_MODEL_REPO)
 
 def parse_conversation(raw_text):
     """
