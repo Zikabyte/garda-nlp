@@ -1,16 +1,26 @@
 # Builds windowed conversation context around each message, so the
 # classifier sees the lead-up to a line instead of judging it in isolation.
 
+def build_context_window(messages, authors, window=3):
+    """
+    Given ordered messages and authors from a single conversation, returns
+    one context string per message: the previous `window` messages plus
+    the message itself, each tagged "self"
+    """
+    context_texts = []
+    for i in range(len(messages)):
+        start = max(0, i - window)
+        lines = [
+            f"{'self' if authors[j] == authors[i] else 'other'}: {messages[j]}"
+            for j in range(start, i + 1)
+        ]
+        context_texts.append("\n".join(lines))
+    return context_texts
+
 def build_context_text(df, window=3):
     """
-    Adds a "context_text" column: the target message prefixed by the
-    previous `window` messages from the same conversation (in order).
-    Each line is tagged "self" (same author as the target message) or
-    "other" (a different author) instead of the raw author_id, so the
-    model sees turn-taking structure without depending on specific
-    participant identities - useful both for training and for scoring
-    conversations pasted into the demo later, where author ids won't
-    match anything the model has seen.
+    Adds a "context_text" column to df by running build_context_window
+    over each conversation_id group, ordered by line.
     """
     df = df.copy()
     df["line"] = df["line"].astype(int)
@@ -18,16 +28,7 @@ def build_context_text(df, window=3):
 
     context_texts = []
     for _, group in df.groupby("conversation_id", sort=False):
-        messages = group["text"].tolist()
-        authors = group["author_id"].tolist()
-
-        for i in range(len(messages)):
-            start = max(0, i - window)
-            lines = [
-                f"{'self' if authors[j] == authors[i] else 'other'}: {messages[j]}"
-                for j in range(start, i + 1)
-            ]
-            context_texts.append("\n".join(lines))
+        context_texts.extend(build_context_window(group["text"].tolist(), group["author_id"].tolist(), window=window))
 
     df["context_text"] = context_texts
     return df
