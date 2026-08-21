@@ -35,7 +35,7 @@ def train(train_dataset):
 def main():
     corpus_df = load_df(TEST_PICKLE_DIR)
     suspicious_lines = load_suspicious_lines(TEST_SUSPICIOUS_LINES_DIR)
-    train_df, test_df = load_train_test_df(corpus_df, suspicious_lines, max_per_class=500)
+    train_df, test_df = load_train_test_df(corpus_df, suspicious_lines, max_per_class=500, ratio=5)
 
     # SetFit expects a "label" column, and an int rather than bool
     train_df = train_df.rename(columns={"is_suspicious": "label"})

@@ -53,7 +53,7 @@ def sample_balanced(df, label_col="is_suspicious", ratio=1.0, max_per_class=None
     sampled = pd.concat([positives, negative_sample])
     return sampled.sample(frac=1, random_state=random_state).reset_index(drop=True)
 
-def load_train_test_df(corpus_df, suspicious_lines, force=False, max_per_class=None, context_window=3):
+def load_train_test_df(corpus_df, suspicious_lines, force=False, max_per_class=None, ratio=1.0, context_window=3):
     """
     Loads balanced train dataframe and test dataframe
     from pickle (if exists) or newly generated
@@ -67,7 +67,7 @@ def load_train_test_df(corpus_df, suspicious_lines, force=False, max_per_class=N
     # rows in the same conversation that might otherwise get sampled away
     labeled_df = build_context_text(labeled_df, window=context_window)
     train_df, test_df = train_test_split_df(labeled_df)
-    balanced_train_df = sample_balanced(train_df, max_per_class=max_per_class)
+    balanced_train_df = sample_balanced(train_df, max_per_class=max_per_class, ratio=ratio)
 
     SAMPLED_TRAIN_PICKLE_PATH.parent.mkdir(parents=True, exist_ok=True)
     balanced_train_df.to_pickle(SAMPLED_TRAIN_PICKLE_PATH)

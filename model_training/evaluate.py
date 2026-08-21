@@ -4,6 +4,8 @@ import pandas as pd
 from sklearn.metrics import classification_report, confusion_matrix, precision_recall_curve
 
 from configs import paths
+from data_processing.context import build_context_text
+from model_training.synthetic_conversations import SYNTHETIC_CONVERSATIONS
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 MODEL_SAVE_PATH = PROJECT_ROOT / paths.SETFIT_MODEL_PATH
@@ -49,21 +51,39 @@ def print_samples(model, test_df, n=10, random_state=42):
     for text, true_label, proba in zip(sample["text"], sample["label"], probas):
         print(f"[label={true_label}] [proba={proba:.4f}] {text}")
 
+def build_synthetic_df(conversations=SYNTHETIC_CONVERSATIONS, window=3):
+    """
+    Turns SYNTHETIC_CONVERSATIONS into a dataframe shaped like the real
+    pipeline's (conversation_id, line, author_id, text, is_suspicious),
+    then reuses build_context_text so scoring goes through the exact same
+    context-window logic as training/the demo.
+    """
+    rows = []
+    for conv_id, lines in conversations.items():
+        for i, (author, text, label) in enumerate(lines, start=1):
+            rows.append({
+                "conversation_id": conv_id,
+                "line": i,
+                "author_id": author,
+                "text": text,
+                "is_suspicious": label,
+            })
+
+    df = pd.DataFrame(rows)
+    return build_context_text(df, window=window)
+
 def main():
     # Load model
     model = SetFitModel.from_pretrained(MODEL_SAVE_PATH)
 
-    # Load test dataset
-    test_df = pd.read_pickle(TEST_PICKLE_PATH)
+    # Synthetic, hand-written conversations - safe to commit/show, unlike
+    # the real PAN12 test set
+    synthetic_df = build_synthetic_df()
 
-    # Same rename/cast as train.py, so predictions line up against "label"
-    test_df = test_df.rename(columns={"is_suspicious": "label"})
-    test_df["label"] = test_df["label"].astype(int)
+    probas = model.predict_proba(synthetic_df["context_text"].tolist(), as_numpy=True)[:, 1]
+    predictions = (probas >= 0.5).astype(int)
 
-    probas = model.predict_proba(test_df["context_text"].tolist(), as_numpy=True)[:, 1]
-
-    fixed_predictions = (probas >= 0.95).astype(int)
-    evaluate(test_df["label"], fixed_predictions, label="Fixed threshold (0.95)")
+    evaluate(synthetic_df["is_suspicious"], predictions, label="Synthetic conversations")
 
 if __name__ == "__main__":
     main()
