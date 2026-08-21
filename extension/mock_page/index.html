@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>GARDA Mock Chat</title>
+    <link rel="stylesheet" href="chat.css" />
+  </head>
+  <body>
+    <h1>Mock Chat (GARDA extension target page)</h1>
+    <p class="note">This is a bundled demo page, not a real messaging site. Install the GARDA extension and reload to see risk badges appear.</p>
+
+    <div id="chat-log">
+      <div class="chat-message" data-sender="other"><span class="message-text">hey whats up</span></div>
+      <div class="chat-message" data-sender="self"><span class="message-text">nm just chilling, u?</span></div>
+      <div class="chat-message" data-sender="other"><span class="message-text">same lol. how old are you btw</span></div>
+      <div class="chat-message" data-sender="self"><span class="message-text">13, you?</span></div>
+      <div class="chat-message" data-sender="other"><span class="message-text">cool, dont tell your parents we talk ok, its our secret</span></div>
+      <div class="chat-message" data-sender="self"><span class="message-text">ok i wont say anything</span></div>
+      <div class="chat-message" data-sender="other"><span class="message-text">can you send me a pic of yourself</span></div>
+    </div>
+
+    <div id="composer">
+      <input id="msg-input" type="text" placeholder="Type a message..." />
+      <button id="send-btn">Send</button>
+    </div>
+
+    <script src="chat.js"></script>
+  </body>
+</html>

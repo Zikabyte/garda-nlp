@@ -1,0 +1,53 @@
+body {
+  width: 320px;
+  font-family: system-ui, sans-serif;
+  padding: 10px;
+}
+
+h1 {
+  font-size: 16px;
+  margin: 0 0 8px;
+}
+
+h2 {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: #666;
+  margin: 12px 0 4px;
+}
+
+textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 12px;
+}
+
+button {
+  margin-top: 6px;
+  cursor: pointer;
+}
+
+#status,
+#summary {
+  font-size: 12px;
+}
+
+.result-row {
+  font-size: 11px;
+  padding: 3px 5px;
+  margin-top: 3px;
+  border-radius: 4px;
+}
+
+.risk-low {
+  background: #dcfce7;
+}
+
+.risk-medium {
+  background: #fef3c7;
+}
+
+.risk-high {
+  background: #fee2e2;
+}

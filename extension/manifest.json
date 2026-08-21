@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "GARDA - Grooming Risk Detector",
+  "version": "1.0.0",
+  "description": "Product simulation: flags high-risk chat lines using GARDA's SetFit classifier.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": ["http://localhost:8000/*"],
+  "content_scripts": [
+    {
+      "matches": ["http://localhost:8000/mock-chat*"],
+      "js": ["content/content.js"],
+      "css": ["content/content.css"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html"
+  }
+}

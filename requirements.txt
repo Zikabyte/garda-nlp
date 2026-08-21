@@ -11,7 +11,11 @@ torch>=2.0.0         # backend for sentence-transformers
  
 # Demo interface
 gradio>=4.0.0
- 
+
+# Extension backend
+fastapi>=0.110.0
+uvicorn>=0.29.0
+
 # Utils
 huggingface_hub>=0.19.0
 python-dotenv>=1.0.0

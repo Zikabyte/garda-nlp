@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="popup.css" />
+</head>
+
+<body>
+  <h1>GARDA</h1>
+
+  <section>
+    <h2>Current page status</h2>
+    <p id="status">Loading...</p>
+  </section>
+
+  <section>
+    <h2>Analyze conversation</h2>
+    <textarea id="input" rows="6" placeholder="A: hey&#10;B: hi&#10;A: how old are you?"></textarea>
+    <button id="load-page-btn">Load from current page</button>
+    <button id="analyze-btn">Analyze</button>
+    <p id="summary"></p>
+    <div id="results"></div>
+  </section>
+
+  <script src="popup.js"></script>
+</body>
+
+</html>
